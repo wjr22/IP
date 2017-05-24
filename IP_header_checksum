@@ -1,0 +1,105 @@
+/*
+	||
+	||writer : wjr
+	||Version : 1.0.1
+	||
+*/
+#include<stdio.h>
+void print_2(int val2);
+int deal(char address[]);
+int main(int argc, char *argv[]){
+	int Version, Hlen, DiffServ, Length, ID, Flag, Slice, SurvivalTime, \
+		Protocol, Others;
+	long long int sum=0;
+	char AimAdress[15];
+	char SourceAddress[15];
+	printf("请输入版本：（十进制，长度0-15）：");
+	scanf("%d", &Version);
+	printf("\n请输入首部长度：（十进制，长度0-15）：");
+	scanf("%d", &Hlen);
+	printf("\n请输入区分服务：（十进制，长度0-255）：");
+	scanf("%d", &DiffServ);
+	Version = Version << 12;
+	Hlen = Hlen << 8;
+	sum += Version ;
+	sum += Hlen ;
+	printf("\n请输入总长度：（十进制，长度0-65535）：");
+	scanf("%d",&Length);
+	sum += Length;
+	printf("\n请输入标识：（十进制，长度0-65535）：");
+	scanf("%d", &ID);
+	sum += ID;
+	printf("\n请输入标志：（十进制，长度0-7）：");
+	scanf("%d", &Flag);
+	//Flag = Flag << 13;
+	sum += Flag << 13;
+	printf("\n请输入片偏移：（十进制，长度0-4095）：");
+	scanf("%d", &Slice);
+	sum += Slice;
+	printf("\n请输入生存时间：（十进制，长度0-255）：");
+	scanf("%d", &SurvivalTime);
+	//SurvivalTime = SurvivalTime << 8;
+	sum += SurvivalTime << 8;
+	printf("\n请输入协议：（十进制，长度0-255）：");
+	scanf("%d", &Protocol);
+	sum += Protocol;
+	printf("\n请输入源地址：（点分十进制）：");
+	scanf("%s", SourceAddress);
+	sum+=deal(SourceAddress);
+	printf("\n请输入目的地址：（点分十进制）：");
+	scanf("%s", AimAdress);
+	sum+=deal(AimAdress);
+	//printf("\n%0xd",sum);
+	//printf("\n%0xd", ~sum);
+	print_2(~sum);
+	getchar();
+	getchar();
+	return 0;
+}
+/*void print_2(int val2)
+{
+	int i, j, k;
+	unsigned int A = 0x80;
+	for (i = 0; i < 16; i++){
+		val2&
+	}
+
+}*/
+
+void print_2(int val2)
+{
+	unsigned char *p = (unsigned char*)&val2 + 3; //从低位到高位,低端字节计算机
+	for (int k = 0; k <= 3; k++)
+	{
+		int val2 = *(p - k);
+		for (int i = 7; i >= 0; i--)
+		{
+			if (val2 & (1 << i))
+				printf("1");
+			else
+				printf("0");
+		}
+		printf(" ");
+	}
+}
+int deal(char address[]){
+	int a[4] = { 0 };
+	int i, j, k = 0;
+	int sum = 0;
+	for (j = 0; j < 4; j++){
+		for (i = k; address[i]!='\0'; i++){
+			k++;
+			if (address[i] == '.'){
+				break;
+			}
+			a[j] *= 10;
+			a[j] += address[i] - '0';
+		}
+	}
+	a[0] = a[0] << 8;
+	a[2] = a[2] << 8;
+	for (j = 0; j < 4; j++){
+		sum += a[j];
+	}
+	return sum;
+}

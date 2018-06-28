@@ -1,2 +1,3 @@
-# IP
-计算IP首部校验码
+# IP Head checksum 
+ this is My First Time to Use computer programs to solve problems.  
+ this is a memorable thing. 
